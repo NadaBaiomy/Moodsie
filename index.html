@@ -132,7 +132,6 @@
                 radial-gradient(circle at 75% 85%, rgba(176, 190, 197, 0.35), rgba(176, 190, 197, 0) 50%);
         }
 
-        /* Floating decor particles */
         .decor-particle {
             position: absolute;
             animation: decorFloat 9s ease-in-out infinite;
@@ -256,6 +255,20 @@
         .star { color: #ddd; transition: 0.2s; }
         .star.filled { color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
 
+        /* Photo preview inside check-in */
+        #photo-preview { position: relative; margin-top: 12px; }
+        #photo-preview img {
+            width: 100%; border-radius: 18px; display: block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        #photo-remove {
+            position: absolute; top: 8px; right: 8px;
+            background: rgba(0,0,0,0.55); color: #fff;
+            width: 30px; height: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; cursor: pointer; user-select: none;
+        }
+
         /* --- Garden --- */
         .garden-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 0; }
         .garden-spot {
@@ -278,6 +291,10 @@
         .journal-item { border-left: 5px solid var(--primary-pink); margin-bottom: 15px; cursor: pointer; }
         .journal-date { font-size: 0.85rem; color: var(--text-grey); font-family: 'Fredoka', sans-serif; }
         .journal-mood { float: right; font-size: 1.5rem; }
+        .journal-photo {
+            width: 100%; height: 120px; object-fit: cover;
+            border-radius: 16px; margin-top: 10px; display: block;
+        }
 
         /* --- Bunny / Accessories --- */
         .profile-header { text-align: center; padding: 20px; }
@@ -334,8 +351,13 @@
             padding: 30px; border-radius: var(--radius-main); width: 100%; max-width: 380px;
             position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 15px 40px rgba(0,0,0,0.1); text-align: center;
+            max-height: 85vh; overflow-y: auto;
         }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-grey); }
+        .modal-photo {
+            width: 100%; border-radius: 20px; margin: 12px 0; display: block;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
 
         /* --- Search --- */
         .search-bar { width: 100%; padding: 12px 20px; border-radius: 50px; border: none; margin-bottom: 20px; background: var(--white); color: var(--text-brown); font-family: 'Quicksand', sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.03); outline: none; }
@@ -352,7 +374,6 @@
 </head>
 <body>
 
-<!-- Mood background decor (patterns + floating emojis) -->
 <div id="bg-decor" aria-hidden="true"></div>
 
 <div id="app-container">
@@ -382,7 +403,7 @@
         <div class="onboarding-slide">
             <span class="onboarding-emoji">🌸</span>
             <h2>How are you feeling today?</h2>
-            <p style="color:var(--text-grey); margin-top:10px;">Let's track your emotions and grow your garden.</p>
+            <p style="color:var(--text-grey); margin-top:10px;">Let's track your emotions and grow our garden.</p>
         </div>
         <div class="onboarding-slide" style="display:none;">
             <span class="onboarding-emoji">🌻</span>
@@ -451,10 +472,17 @@
             </div>
 
             <div style="display: flex; gap: 20px; justify-content: center; color: var(--primary-pink); font-size: 1.5rem;">
-                <span style="cursor:pointer;" onclick="toggleExtra('photo')">📸</span>
+                <span style="cursor:pointer;" onclick="pickPhoto()">📸</span>
                 <span style="cursor:pointer;" onclick="toggleExtra('music')">🎵</span>
             </div>
             <div id="extra-status" style="text-align: center; font-size: 0.8rem; margin-top: 8px; color: var(--text-grey); min-height: 1em;"></div>
+
+            <!-- Hidden file input + photo preview -->
+            <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="onPhotoPicked(event)">
+            <div id="photo-preview" style="display:none;">
+                <img id="photo-preview-img" alt="Photo preview">
+                <span id="photo-remove" onclick="removePhoto()">✕</span>
+            </div>
 
             <button class="btn btn-primary" style="width: 100%; margin-top: 25px;" onclick="saveEntry()">Save my day ♡</button>
         </div>
@@ -591,7 +619,6 @@
         { value: '👓', icon: '👓', label: 'Glasses', top: 56,  left: 50 }
     ];
 
-    /* Floating background emojis per mood */
     const MOOD_DECOR = {
         tired:     ['🌙', '💤', '⭐', '✨'],
         good:      ['☀️', '✨', '🌟', '😎'],
@@ -616,6 +643,7 @@
     let currentDate = new Date();
     let tempRating = 0;
     let appReady = false;
+    let tempPhoto = null; // data URL of the picked photo
     const extras = { photo: false, music: false };
 
     /* --- Helpers --- */
@@ -629,7 +657,7 @@
         return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
     }
 
-    /* --- Background Decor: floating emojis per mood --- */
+    /* --- Background Decor --- */
     function setDecor(moodId) {
         const decor = document.getElementById('bg-decor');
         if (!decor) return;
@@ -660,7 +688,7 @@
     }
 
     /* ============================================================
-       BOOT — runs immediately (no window.onload → no stuck splash)
+       BOOT
        ============================================================ */
     (function boot() {
         try { loadData(); } catch (e) {}
@@ -699,8 +727,10 @@
 
     /* --- Persistence --- */
     function saveData() {
-        try { localStorage.setItem('moodsieData', JSON.stringify(appState)); } catch (e) {}
+        let ok = true;
+        try { localStorage.setItem('moodsieData', JSON.stringify(appState)); } catch (e) { ok = false; }
         try { updateStats(); } catch (e) {}
+        return ok;
     }
     function loadData() {
         try {
@@ -825,12 +855,77 @@
         });
     }
 
-    function toggleExtra(type) {
-        extras[type] = !extras[type];
+    function updateExtraStatus() {
         const parts = [];
         if (extras.photo) parts.push('📸 Photo added');
         if (extras.music) parts.push('🎵 Music linked');
         document.getElementById('extra-status').innerText = parts.join(' · ');
+    }
+
+    function toggleExtra(type) {
+        if (type === 'photo') { pickPhoto(); return; } // 📸 opens the gallery/camera now
+        extras[type] = !extras[type];
+        updateExtraStatus();
+    }
+
+    /* ============================================================
+       PHOTO PICKING (from phone gallery or camera)
+       The image is auto-resized + compressed so localStorage
+       doesn't blow up (~100KB per photo instead of ~5MB).
+       ============================================================ */
+    function pickPhoto() {
+        document.getElementById('photo-input').click();
+    }
+
+    function onPhotoPicked(e) {
+        const file = e.target.files && e.target.files[0];
+        e.target.value = ''; // allow re-picking the same file
+        if (!file) return;
+        if (!file.type || !file.type.startsWith('image/')) {
+            showToast('That is not an image 😅');
+            return;
+        }
+        compressImage(file, function (dataUrl) {
+            if (!dataUrl) { showToast('Could not load that image 😅'); return; }
+            tempPhoto = dataUrl;
+            extras.photo = true;
+            document.getElementById('photo-preview-img').src = dataUrl;
+            document.getElementById('photo-preview').style.display = 'block';
+            updateExtraStatus();
+        });
+    }
+
+    function compressImage(file, cb) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            const img = new Image();
+            img.onload = function () {
+                const maxDim = 800; // longest side after resize
+                let w = img.width, h = img.height;
+                if (w > maxDim || h > maxDim) {
+                    if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
+                    else { w = Math.round(w * maxDim / h); h = maxDim; }
+                }
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    cb(canvas.toDataURL('image/jpeg', 0.75));
+                } catch (err) { cb(null); }
+            };
+            img.onerror = function () { cb(null); };
+            img.src = reader.result;
+        };
+        reader.onerror = function () { cb(null); };
+        reader.readAsDataURL(file);
+    }
+
+    function removePhoto() {
+        tempPhoto = null;
+        extras.photo = false;
+        document.getElementById('photo-preview').style.display = 'none';
+        document.getElementById('photo-input').value = '';
+        updateExtraStatus();
     }
 
     function saveEntry() {
@@ -839,17 +934,27 @@
         const todayStr = todayISO();
         const existingIndex = appState.entries.findIndex(e => e.date === todayStr);
 
-        const entry = { date: todayStr, moodId: currentMood.id, note: note, rating: tempRating, flower: currentMood.flower };
+        const entry = { date: todayStr, moodId: currentMood.id, note: note, rating: tempRating, flower: currentMood.flower, photo: tempPhoto || null };
         if (existingIndex >= 0) appState.entries[existingIndex] = entry;
         else { appState.entries.push(entry); checkStreak(todayStr); }
 
-        saveData();
+        let ok = saveData();
+        if (!ok && entry.photo) {
+            // Storage full → at least keep the memory without the photo
+            entry.photo = null;
+            const idx = appState.entries.findIndex(e => e.date === todayStr);
+            if (idx >= 0) appState.entries[idx].photo = null;
+            ok = saveData();
+        }
 
-        // Reset for next check-in (back to sakura default decor)
+        // Reset for next check-in
         document.getElementById('journal-note').value = '';
         document.getElementById('extra-status').innerText = '';
         extras.photo = false; extras.music = false;
         tempRating = 0;
+        tempPhoto = null;
+        document.getElementById('photo-preview').style.display = 'none';
+        document.getElementById('photo-input').value = '';
         document.querySelectorAll('.star').forEach(x => x.classList.remove('filled'));
         document.getElementById('check-in-area').style.display = 'none';
         document.getElementById('needs-area').style.display = 'none';
@@ -859,7 +964,7 @@
         document.body.className = '';
         setDecor(null);
 
-        showToast('Saved to your garden! 🌱✨');
+        showToast(ok ? 'Saved to your garden! 🌱✨' : 'Saved here — but storage is full 😅');
         setTimeout(() => switchTab('garden'), 900);
     }
 
@@ -884,7 +989,7 @@
             const el = document.createElement('div');
             el.className = 'garden-spot';
             el.title = prettyDate(entry.date);
-            el.innerText = mood ? mood.flower : '🌱';
+            el.innerText = entry.photo ? '📷' : (mood ? mood.flower : '🌱'); // flowers with a photo become camera flowers
             el.onclick = () => showEntryDetail(entry);
             container.appendChild(el);
         });
@@ -933,6 +1038,7 @@
                 <div class="journal-mood">${mood ? mood.emoji : ''}</div>
                 <div class="journal-date">${prettyDate(e.date)}</div>
                 <p style="margin-top:5px;">${esc(e.note) || 'No note...'}</p>
+                ${e.photo ? `<img class="journal-photo" src="${e.photo}" alt="memory photo">` : ''}
             </div>`;
         }).join('');
     }
@@ -1032,6 +1138,7 @@
             <h3>${prettyDate(entry.date)}</h3>
             <p>${mood ? mood.label + ' ' + mood.emoji : ''}</p>
             <div style="color:#FFD700; margin:10px 0; letter-spacing:3px;">${stars}</div>
+            ${entry.photo ? `<img class="modal-photo" src="${entry.photo}" alt="memory photo">` : ''}
             <div class="card" style="background:rgba(255,255,255,0.5); box-shadow:none; margin:0;">
                 <p>${esc(entry.note) || 'No note added.'}</p>
             </div>
