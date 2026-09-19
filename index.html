@@ -52,9 +52,7 @@
 
         #app-container { width: 100%; max-width: 420px; min-height: 100vh; position: relative; z-index: 1; padding-bottom: 90px; }
 
-        /* ============================================================
-           MOOD BACKGROUND DECOR
-           ============================================================ */
+        /* --- Background Decor --- */
         #bg-decor {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -145,14 +143,11 @@
             to { transform: translateY(125vh); }
         }
 
-        /* --- Animations --- */
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
         @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ============================================================
-           HOME LOGO — girly, static (no animation)
-           ============================================================ */
+        /* --- Home Logo --- */
         .app-logo { display: flex; flex-direction: column; align-items: center; gap: 5px; margin: 4px 0 10px; }
         .logo-icon {
             position: relative;
@@ -176,6 +171,74 @@
             font-family: 'Fredoka', sans-serif; font-size: 1.2rem;
             color: var(--text-brown); letter-spacing: 2px;
         }
+
+        /* ============================================================
+           DAILY MESSAGE CARD 💌
+           ============================================================ */
+        #daily-message-card {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #FFD3DC 0%, #FFB7C5 100%);
+            border-radius: 24px;
+            padding: 18px 20px;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 141, 161, 0.25);
+            animation: fadeIn 0.5s ease;
+        }
+        .dm-title {
+            font-family: 'Fredoka', sans-serif; font-size: 0.75rem;
+            letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.9;
+        }
+        #daily-message-text {
+            font-family: 'Fredoka', sans-serif; font-size: 1.05rem;
+            margin-top: 7px; line-height: 1.45;
+        }
+        .dm-hint { font-size: 0.7rem; opacity: 0.75; margin-top: 10px; }
+
+        /* ============================================================
+           LOCK SCREEN 🔒
+           ============================================================ */
+        #lock-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1500; display: none;
+            align-items: center; justify-content: center;
+            background: linear-gradient(160deg, #FFC1CC 0%, #FF8DA1 100%);
+        }
+        #lock-screen.show { display: flex; }
+        .lock-card { text-align: center; width: 300px; }
+        #lock-emoji { font-size: 3.2rem; margin-bottom: 10px; }
+        #lock-title { color: #fff; font-family: 'Fredoka', sans-serif; font-size: 1.5rem; }
+        #lock-sub { color: rgba(255,255,255,0.85); font-size: 0.85rem; margin-top: 4px; }
+        .lock-dots { display: flex; justify-content: center; gap: 14px; margin: 26px 0; }
+        .lock-dot {
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid #fff; transition: background 0.15s, transform 0.15s;
+        }
+        .lock-dot.filled { background: #fff; transform: scale(1.15); }
+        .lock-shake { animation: shake .45s; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+        .lock-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; justify-items: center; }
+        .key {
+            width: 68px; height: 68px; border-radius: 50%;
+            background: rgba(255,255,255,0.92); border: none;
+            font-family: 'Fredoka', sans-serif; font-size: 1.5rem;
+            color: var(--text-brown); cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: 0.12s;
+        }
+        .key:active { transform: scale(0.9); }
+        .key.blank { visibility: hidden; }
+        #lock-forgot {
+            display: none; margin-top: 20px;
+            color: rgba(255,255,255,0.9); font-size: 0.8rem;
+        }
+        #lock-forgot span { text-decoration: underline; cursor: pointer; }
 
         /* --- Components --- */
         .btn {
@@ -277,7 +340,6 @@
         .star { color: #ddd; transition: 0.2s; }
         .star.filled { color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
 
-        /* Photo preview inside check-in */
         #photo-preview { position: relative; margin-top: 12px; }
         #photo-preview img {
             width: 100%; border-radius: 18px; display: block;
@@ -337,6 +399,14 @@
         }
         .acc-btn.selected { border-color: var(--primary-pink); background: #FFF5F7; transform: scale(1.08); }
         .acc-label { font-size: 0.7rem; margin-top: 4px; color: var(--text-grey); font-family: 'Fredoka', sans-serif; }
+
+        /* --- Settings rows --- */
+        .setting-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--white); border-radius: 16px; padding: 14px 16px;
+            margin: 8px 0; cursor: pointer; box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+        }
+        .setting-state { font-family: 'Fredoka', sans-serif; font-size: 0.85rem; color: var(--primary-pink); }
 
         /* --- Navigation --- */
         .nav-bar {
@@ -445,7 +515,6 @@
 
     <!-- 3. Home -->
     <div id="home-screen" class="screen">
-        <!-- Girly static logo -->
         <div class="app-logo">
             <div class="logo-icon">
                 <span class="logo-bow">🎀</span>
@@ -483,6 +552,13 @@
             <div style="text-align: center; margin-top: 25px;">
                 <button class="btn btn-small" onclick="showSurprise()">✨ Surprise Me</button>
             </div>
+        </div>
+
+        <!-- 💌 Daily Message -->
+        <div id="daily-message-card" onclick="showBonusMessage()">
+            <div class="dm-title">💌 Message of the day</div>
+            <div id="daily-message-text"></div>
+            <div class="dm-hint">tap for another little note ✨</div>
         </div>
 
         <div id="needs-area" class="card" style="display:none;">
@@ -599,7 +675,15 @@
 
         <div class="card">
             <h3>Settings ⚙️</h3>
-            <button class="btn btn-small" onclick="resetData()" style="background: #FFCDD2; color: #B71C1C; width: 100%; border:none;">Reset All Data</button>
+            <div class="setting-row" onclick="pinSettings()">
+                <span>🔒 App lock</span>
+                <span class="setting-state" id="pin-state">Off</span>
+            </div>
+            <div class="setting-row" onclick="toggleDailyNotif()">
+                <span>🔔 Daily message notification</span>
+                <span class="setting-state" id="notif-state">Off</span>
+            </div>
+            <button class="btn btn-small" onclick="resetData()" style="background: #FFCDD2; color: #B71C1C; width: 100%; border:none; margin-top:12px;">Reset All Data</button>
         </div>
     </div>
 
@@ -620,6 +704,34 @@
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">&times;</span>
         <div id="modal-body"></div>
+    </div>
+</div>
+
+<!-- 🔒 Lock Screen -->
+<div id="lock-screen">
+    <div class="lock-card">
+        <div id="lock-emoji">🔒</div>
+        <h3 id="lock-title">Welcome back!</h3>
+        <p id="lock-sub">Enter your PIN to open Moodsie</p>
+        <div class="lock-dots" id="lock-dots">
+            <span class="lock-dot"></span><span class="lock-dot"></span>
+            <span class="lock-dot"></span><span class="lock-dot"></span>
+        </div>
+        <div class="lock-keypad">
+            <button class="key" onclick="lockKey('1')">1</button>
+            <button class="key" onclick="lockKey('2')">2</button>
+            <button class="key" onclick="lockKey('3')">3</button>
+            <button class="key" onclick="lockKey('4')">4</button>
+            <button class="key" onclick="lockKey('5')">5</button>
+            <button class="key" onclick="lockKey('6')">6</button>
+            <button class="key" onclick="lockKey('7')">7</button>
+            <button class="key" onclick="lockKey('8')">8</button>
+            <button class="key" onclick="lockKey('9')">9</button>
+            <div class="key blank"></div>
+            <button class="key" onclick="lockKey('0')">0</button>
+            <button class="key" onclick="lockKey('del')">⌫</button>
+        </div>
+        <p id="lock-forgot"><span onclick="forgotPin()">Forgot PIN? Reset the app</span></p>
     </div>
 </div>
 
@@ -662,12 +774,59 @@
     };
     const DEFAULT_DECOR = ['🌸', '✨', '🎀', '💗'];
 
+    /* 💌 Daily sweet messages */
+    const DAILY_MESSAGES = [
+        "Every day may not be good, but there's something good in every day 🌷",
+        "You are blooming, even on days you can't see it 🌱",
+        "Rest is productive too 🌙",
+        "Small steps still count as steps 🐾",
+        "Be as soft with yourself as you are with others 🤍",
+        "One deep breath can change your whole day 🌬️",
+        "Your feelings are valid — all of them 💗",
+        "Drink some water, little flower 💧",
+        "Flowers don't compete, they just bloom 🌻",
+        "You don't have to be perfect to be wonderful ♡",
+        "It's okay to start over — gardens do it every spring 🌸",
+        "You've survived 100% of your hardest days so far 💪",
+        "Somebody smiles just because you exist 🌸",
+        "Progress, not perfection 🌷",
+        "You're allowed to take up space 🌟",
+        "Today is a fresh little page ✍️",
+        "Healing isn't linear, and that's okay 🤍",
+        "The bunny believes in you 🐰",
+        "Even the moon takes a month to become full 🌙",
+        "You make ordinary days feel warm ☀️",
+        "Your heart is doing its best today too 💕",
+        "Slow mornings are self-care ☕",
+        "Crying is just your heart watering itself 🌧️",
+        "You are more than one bad day 🌈",
+        "Look how far you've come already 🌻",
+        "Joy can be tiny: warm socks, good songs 🎧",
+        "The garden is proud of you 🌷",
+        "Nothing lasts forever — not even bad moods 🌬️",
+        "You deserve the love you give so freely 💗",
+        "Today's forecast: growth with a chance of sparkles ✨",
+        "You're not late. You're on your own path 🌸",
+        "Sending you a big virtual hug 🤗",
+        "It's brave to feel things deeply 💧",
+        "Water, sunshine, and a little patience — that's all 🌱",
+        "You light up rooms more than you know ✨",
+        "Be proud of your small wins today 🏆",
+        "A bad day is just one page, not the whole book 📖",
+        "You are someone's favorite person 🤍",
+        "Grow through what you go through 🌻",
+        "The best is quietly on its way 💌"
+    ];
+
     let appState = {
         entries: [],
         currentAccessory: '',
         streak: 0,
         lastCheckIn: null,
-        onboardingDone: false
+        onboardingDone: false,
+        pinHash: null,
+        notifEnabled: false,
+        msgOffset: null
     };
 
     let currentMood = null;
@@ -675,6 +834,7 @@
     let tempRating = 0;
     let appReady = false;
     let tempPhoto = null;
+    let swReg = null;
     const extras = { photo: false, music: false };
 
     /* --- Helpers --- */
@@ -687,6 +847,240 @@
         const d = new Date(dateStr + 'T00:00:00');
         return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
     }
+    function simpleHash(str) {
+        let h = 5381;
+        for (let i = 0; i < str.length; i++) {
+            h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+        }
+        return 'p' + (h >>> 0).toString(36);
+    }
+
+    /* ============================================================
+       💌 DAILY MESSAGE
+       ============================================================ */
+    function getMessageOfDay() {
+        if (appState.msgOffset === null || appState.msgOffset === undefined) {
+            appState.msgOffset = Math.floor(Math.random() * DAILY_MESSAGES.length);
+            try { saveData(); } catch (e) {}
+        }
+        const dayIndex = Math.floor(Date.now() / 86400000);
+        return DAILY_MESSAGES[(dayIndex + appState.msgOffset) % DAILY_MESSAGES.length];
+    }
+    function updateDailyMessage() {
+        const el = document.getElementById('daily-message-text');
+        if (el) el.innerText = getMessageOfDay();
+    }
+    function showBonusMessage() {
+        const el = document.getElementById('daily-message-text');
+        let m = getMessageOfDay();
+        for (let i = 0; i < 6 && m === el.innerText; i++) {
+            m = DAILY_MESSAGES[Math.floor(Math.random() * DAILY_MESSAGES.length)];
+        }
+        el.innerText = m;
+    }
+
+    /* ============================================================
+       🔔 NOTIFICATIONS (service worker + periodic sync)
+       ============================================================ */
+    async function initServiceWorker() {
+        if (!('serviceWorker' in navigator)) return;
+        try {
+            swReg = await navigator.serviceWorker.register('sw.js');
+            if ('periodicSync' in swReg) {
+                try {
+                    await swReg.periodicSync.register('daily-msg', { minInterval: 24 * 60 * 60 * 1000 });
+                } catch (e) {}
+            }
+        } catch (e) {}
+    }
+
+    async function toggleDailyNotif() {
+        if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+            showToast('Not supported on this browser 😅');
+            return;
+        }
+        if (appState.notifEnabled) {
+            appState.notifEnabled = false;
+            saveData();
+            if (swReg && 'periodicSync' in swReg) {
+                try { await swReg.periodicSync.unregister('daily-msg'); } catch (e) {}
+            }
+            updateNotifStateUI();
+            showToast('Daily notifications off 🔕');
+            return;
+        }
+        let perm = Notification.permission;
+        if (perm === 'default') perm = await Notification.requestPermission();
+        if (perm !== 'granted') { showToast('Notifications blocked 🙈'); return; }
+
+        await initServiceWorker();
+        try { swReg = swReg || (await navigator.serviceWorker.ready); } catch (e) {}
+        appState.notifEnabled = true;
+        saveData();
+        updateNotifStateUI();
+        showToast('Daily messages on! 🔔');
+
+        // Send one right away as a test
+        try {
+            if (swReg) {
+                await swReg.showNotification('Moodsie 🎀', {
+                    body: getMessageOfDay(),
+                    icon: 'icon-girl.svg',
+                    tag: 'moodsie-test'
+                });
+            }
+        } catch (e) {}
+    }
+
+    function updateNotifStateUI() {
+        const el = document.getElementById('notif-state');
+        if (el) el.innerText = appState.notifEnabled ? 'On 🔔' : 'Off';
+    }
+
+    /* ============================================================
+       🔒 PIN LOCK
+       ============================================================ */
+    let lockMode = 'unlock';
+    let lockBuffer = '';
+    let lockPending = null;
+    let lockCallback = null;
+    let lockFails = 0;
+
+    function needsPin() { return !!appState.pinHash; }
+
+    function setLockUI(mode) {
+        lockMode = mode;
+        lockBuffer = '';
+        const t = {
+            unlock: ['🔒', 'Welcome back!', 'Enter your PIN to open Moodsie'],
+            set: ['🎀', 'Choose a PIN', 'Pick 4 easy digits you\'ll remember'],
+            confirm: ['✨', 'Confirm your PIN', 'Type the same 4 digits again'],
+            verify: ['🔒', 'Quick check', 'Enter your current PIN first']
+        }[mode] || ['🔒', '', ''];
+        document.getElementById('lock-emoji').innerText = t[0];
+        document.getElementById('lock-title').innerText = t[1];
+        document.getElementById('lock-sub').innerText = t[2];
+        updateLockDots();
+    }
+
+    function openLock(mode, callback) {
+        lockPending = null;
+        lockCallback = callback || null;
+        lockFails = 0;
+        document.getElementById('lock-forgot').style.display = 'none';
+        setLockUI(mode);
+        document.getElementById('lock-screen').classList.add('show');
+    }
+
+    function closeLock() {
+        document.getElementById('lock-screen').classList.remove('show');
+        lockBuffer = '';
+        lockPending = null;
+        lockCallback = null;
+    }
+
+    function lockKey(k) {
+        if (k === 'del') { lockBuffer = lockBuffer.slice(0, -1); updateLockDots(); return; }
+        if (lockBuffer.length >= 4) return;
+        lockBuffer += k;
+        updateLockDots();
+        if (lockBuffer.length === 4) setTimeout(checkLock, 180);
+    }
+
+    function updateLockDots() {
+        document.querySelectorAll('.lock-dot').forEach((d, i) => {
+            d.classList.toggle('filled', i < lockBuffer.length);
+        });
+    }
+
+    function lockFail() {
+        const dots = document.getElementById('lock-dots');
+        dots.classList.remove('lock-shake');
+        void dots.offsetWidth;
+        dots.classList.add('lock-shake');
+        if (lockMode === 'unlock') {
+            lockFails++;
+            document.getElementById('lock-forgot').style.display = (lockFails >= 3) ? 'block' : 'none';
+        }
+        lockBuffer = '';
+        setTimeout(updateLockDots, 300);
+    }
+
+    function checkLock() {
+        if (lockMode === 'unlock' || lockMode === 'verify') {
+            if (simpleHash(lockBuffer) === appState.pinHash) {
+                const cb = lockCallback;
+                closeLock();
+                if (cb) cb(true);
+            } else {
+                lockFail();
+            }
+        } else if (lockMode === 'set') {
+            lockPending = lockBuffer;
+            lockBuffer = '';
+            setLockUI('confirm');
+        } else if (lockMode === 'confirm') {
+            if (lockBuffer === lockPending) {
+                appState.pinHash = simpleHash(lockBuffer);
+                saveData();
+                updatePinStateUI();
+                const cb = lockCallback;
+                closeLock();
+                if (cb) cb(true);
+                showToast('App locked! 🔒');
+            } else {
+                lockFail();
+                lockPending = null;
+                setTimeout(function () { setLockUI('set'); }, 600);
+            }
+        }
+    }
+
+    function forgotPin() {
+        if (confirm('Forgot your PIN? This will erase ALL your memories and reset the app. Continue?')) {
+            try { localStorage.removeItem('moodsieData'); } catch (e) {}
+            location.reload();
+        }
+    }
+
+    function pinSettings() {
+        if (!needsPin()) {
+            openLock('set', updatePinStateUI);
+        } else {
+            openLock('verify', function () {
+                showModal('🔒 App Lock', `
+                    <p style="margin-bottom:15px; font-size:0.9rem;">What do you want to do?</p>
+                    <button class="btn btn-primary" style="width:100%; margin-bottom:10px;" onclick="closeModal(); openLock('set', updatePinStateUI);">Change PIN ♡</button>
+                    <button class="btn btn-small" style="width:100%; border-color:#ffcccc; color:#ffaaaa;" onclick="removePinNow();">Remove the lock</button>
+                `);
+            });
+        }
+    }
+
+    function removePinNow() {
+        closeModal();
+        appState.pinHash = null;
+        saveData();
+        updatePinStateUI();
+        showToast('Lock removed 🔓');
+    }
+
+    function updatePinStateUI() {
+        const el = document.getElementById('pin-state');
+        if (el) el.innerText = needsPin() ? 'On 🔒' : 'Off';
+    }
+
+    /* Re-lock after being away 30+ seconds */
+    let hiddenAt = 0;
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+            hiddenAt = Date.now();
+        } else if (appReady && needsPin() && hiddenAt && Date.now() - hiddenAt > 30000) {
+            if (!document.getElementById('lock-screen').classList.contains('show')) {
+                openLock('unlock');
+            }
+        }
+    });
 
     /* --- Background Decor --- */
     function setDecor(moodId) {
@@ -726,10 +1120,14 @@
         try { validateStreak(); } catch (e) {}
         try { updateGreeting(); } catch (e) {}
         try { updateTodayHint(); } catch (e) {}
+        try { updateDailyMessage(); } catch (e) {}
         try { initMoodGrid(); } catch (e) {}
         try { initRating(); } catch (e) {}
         try { initAccessories(); } catch (e) {}
+        try { updatePinStateUI(); } catch (e) {}
+        try { updateNotifStateUI(); } catch (e) {}
         try { setDecor(null); } catch (e) {}
+        if (appState.notifEnabled) { try { initServiceWorker(); } catch (e) {} }
         setTimeout(checkAppReady, 1800);
     })();
 
@@ -755,6 +1153,7 @@
         } else {
             document.getElementById('home-screen').classList.add('active');
         }
+        if (needsPin()) openLock('unlock');
     }
 
     /* --- Persistence --- */
@@ -987,7 +1386,6 @@
             ok = saveData();
         }
 
-        // Reset the check-in form
         document.getElementById('journal-note').value = '';
         document.getElementById('extra-status').innerText = '';
         extras.photo = false; extras.music = false;
@@ -1004,7 +1402,6 @@
         document.body.className = '';
         setDecor(null);
 
-        // ✅ STAY on home page (no switching to garden)
         updateTodayHint();
         showToast(ok ? 'Saved! 🌱✨' : 'Saved here — but storage is full 😅');
         window.scrollTo({ top: 0, behavior: 'smooth' });
