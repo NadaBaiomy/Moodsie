@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodsie — Your Mood Garden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap" rel="stylesheet"></noscript>
+    <style>
+        :root {
+            --primary-pink: #FFB7C5;
+            --dark-pink: #FF8DA1;
+            --bg-pink: #FFF0F3;
+            --white: #ffffff;
+            --bunny-grey: #E0E0E0;
+            --bunny-ear-pink: #FFC0CB;
+            --text-brown: #6D4C41;
+            --text-grey: #8D6E63;
+            --glass: rgba(255, 255, 255, 0.7);
+            --shadow: 0 10px 30px rgba(255, 183, 197, 0.3);
+            --radius-main: 30px;
+            --radius-btn: 50px;
+        }
+
+        body.theme-tired { --bg-pink: #E3F2FD; --primary-pink: #90CAF9; --text-brown: #37474F; }
+        body.theme-good { --bg-pink: #FFF9C4; --primary-pink: #FFF176; --text-brown: #F57F17; }
+        body.theme-emotional { --bg-pink: #E1BEE7; --primary-pink: #CE93D8; --text-brown: #4A148C; }
+        body.theme-motivated { --bg-pink: #FFCCBC; --primary-pink: #FFAB91; --text-brown: #BF360C; }
+        body.theme-angry { --bg-pink: #FFCDD2; --primary-pink: #EF9A9A; --text-brown: #B71C1C; }
+        body.theme-happy { --bg-pink: #C8E6C9; --primary-pink: #A5D6A7; --text-brown: #1B5E20; }
+        body.theme-sad { --bg-pink: #C5CAE9; --primary-pink: #9FA8DA; --text-brown: #1A237E; }
+        body.theme-meh { --bg-pink: #ECEFF1; --primary-pink: #B0BEC5; --text-brown: #37474F; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-pink);
+            color: var(--text-brown);
+            min-height: 100vh;
+            transition: background-color 0.8s ease, color 0.5s ease;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        h1, h2, h3, .logo-font { font-family: 'Fredoka', sans-serif; }
+
+        #app-container { width: 100%; max-width: 420px; min-height: 100vh; position: relative; z-index: 1; padding-bottom: 90px; }
+
+        /* ============================================================
+           MOOD BACKGROUND DECOR — pattern + gradients + particles
+           ============================================================ */
+        #bg-decor {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            background-repeat: repeat, no-repeat, no-repeat;
+        }
+
+        /* Default: soft sakura hearts */
+        #bg-decor {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20 29c-4.8-3.5-8-6.3-8-10a4.5 4.5 0 0 1 8-2.8 4.5 4.5 0 0 1 8 2.8c0 3.7-3.2 6.5-8 10z' fill='white' fill-opacity='0.30'/%3E%3Cpath d='M58 62c-4.2-3-7-5.5-7-8.8a3.9 3.9 0 0 1 7-2.4 3.9 3.9 0 0 1 7 2.4c0 3.3-2.8 5.8-7 8.8z' fill='white' fill-opacity='0.22'/%3E%3Ccircle cx='56' cy='16' r='1.5' fill='white' fill-opacity='0.5'/%3E%3Ccircle cx='30' cy='58' r='1.2' fill='white' fill-opacity='0.4'/%3E%3Ccircle cx='70' cy='40' r='1' fill='white' fill-opacity='0.3'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 18% 10%, rgba(255, 183, 197, 0.55), rgba(255, 183, 197, 0) 45%),
+                radial-gradient(circle at 85% 90%, rgba(255, 214, 224, 0.7), rgba(255, 214, 224, 0) 55%);
+        }
+
+        /* Tired: night sky + stars */
+        body.theme-tired #bg-decor {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M22 14l2 5 5 2-5 2-2 5-2-5-5-2 5-2z' fill='white' fill-opacity='0.5'/%3E%3Cpath d='M58 46l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z' fill='white' fill-opacity='0.35'/%3E%3Ccircle cx='60' cy='18' r='1.5' fill='white' fill-opacity='0.5'/%3E%3Ccircle cx='36' cy='62' r='1.2' fill='white' fill-opacity='0.45'/%3E%3Ccircle cx='12' cy='42' r='1' fill='white' fill-opacity='0.35'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 82% 8%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 20%),
+                radial-gradient(circle at 12% 85%, rgba(100, 181, 246, 0.45), rgba(100, 181, 246, 0) 55%);
+        }
+
+        /* Good: sunny sparkles */
+        body.theme-good #bg-decor {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20 14l2.2 5.3 5.3 2.2-5.3 2.2-2.2 5.3-2.2-5.3-5.3-2.2 5.3-2.2z' fill='white' fill-opacity='0.5'/%3E%3Cpath d='M56 50l1.8 4.4 4.4 1.8-4.4 1.8-1.8 4.4-1.8-4.4-4.4-1.8 4.4-1.8z' fill='white' fill-opacity='0.4'/%3E%3Ccircle cx='58' cy='16' r='3' fill='white' fill-opacity='0.45'/%3E%3Ccircle cx='30' cy='62' r='1.5' fill='white' fill-opacity='0.4'/%3E%3Ccircle cx='70' cy='38' r='1.2' fill='white' fill-opacity='0.35'/%3E%3Ccircle cx='10' cy='30' r='1' fill='white' fill-opacity='0.3'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 85% 12%, rgba(255, 235, 59, 0.55), rgba(255, 235, 59, 0) 45%),
+                radial-gradient(circle at 15% 85%, rgba(255, 241, 118, 0.45), rgba(255, 241, 118, 0) 50%);
+        }
+
+        /* Emotional: tears */
+        body.theme-emotional #bg-decor {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M22 14c2.4 4.4 5.6 7.8 5.6 11a5.6 5.6 0 1 1-11.2 0c0-3.2 3.2-6.6 5.6-11z' fill='white' fill-opacity='0.4'/%3E%3Cpath d='M58 48c2 3.6 4.6 6.4 4.6 9a4.6 4.6 0 1 1-9.2 0c0-2.6 2.6-5.4 4.6-9z' fill='white' fill-opacity='0.3'/%3E%3Ccircle cx='60' cy='20' r='1.2' fill='white' fill-opacity='0.35'/%3E%3Ccircle cx='14' cy='58' r='1' fill='white' fill-opacity='0.3'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at 50% -8%, rgba(186, 104, 200, 0.45), rgba(186, 104, 200, 0) 60%),
+                radial-gradient(circle at 85% 88%, rgba(206, 147, 216, 0.4), rgba(206, 147, 216, 0) 50%);
+        }
+
+        /* Motivated: energy bolts */
+        body.theme-motivated #bg-decor {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M24 10l-10 15h6l-4 13 13-16h-7l5-12z' fill='white' fill-opacity='0.4'/%3E%3Cpath d='M58 44l-7 10h4l-3 9 9-11h-5l3-8z' fill='white' fill-opacity='0.3'/%3E%3Ccircle cx='60' cy='16' r='1.4' fill='white' fill-opacity='0.45'/%3E%3Ccircle cx='38' cy='64' r='1.1' fill='white' fill-opacity='0.35'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 12% 10%, rgba(255, 138, 101, 0.5), rgba(255, 138, 101, 0) 50%),
+                radial-gradient(circle at 88% 85%, rgba(255, 171, 145, 0.55), rgba(255, 171, 145, 0) 50%);
+        }
+
+        /* Angry: burst marks */
+        body.theme-angry #bg-decor {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20 8v7M20 31v7M8 20h7M31 20h7M12 12l5 5M28 12l-5 5M12 28l5-5M28 28l-5-5' stroke='white' stroke-width='3' stroke-linecap='round' opacity='0.4'/%3E%3Cpath d='M56 52l-6 9h5l-2 8 8-10h-5l3-7z' fill='white' fill-opacity='0.3'/%3E%3Ccircle cx='58' cy='18' r='1.3' fill='white' fill-opacity='0.4'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 50% -10%, rgba(239, 83, 80, 0.45), rgba(239, 83, 80, 0) 55%),
+                radial-gradient(circle at 88% 88%, rgba(255, 138, 128, 0.4), rgba(255, 138, 128, 0) 45%);
+        }
+
+        /* Happy: hearts + sparkles */
+        body.theme-happy #bg-decor {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20 30c-4.8-3.5-8-6.3-8-10a4.5 4.5 0 0 1 8-2.8 4.5 4.5 0 0 1 8 2.8c0 3.7-3.2 6.5-8 10z' fill='white' fill-opacity='0.4'/%3E%3Cpath d='M56 64c-4-2.9-6.6-5.2-6.6-8.3a3.7 3.7 0 0 1 6.6-2.3 3.7 3.7 0 0 1 6.6 2.3c0 3.1-2.6 5.4-6.6 8.3z' fill='white' fill-opacity='0.3'/%3E%3Cpath d='M58 14l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z' fill='white' fill-opacity='0.45'/%3E%3Ccircle cx='34' cy='58' r='1.3' fill='white' fill-opacity='0.4'/%3E%3Ccircle cx='68' cy='40' r='1' fill='white' fill-opacity='0.35'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 15% 12%, rgba(165, 214, 167, 0.55), rgba(165, 214, 167, 0) 50%),
+                radial-gradient(circle at 85% 88%, rgba(255, 183, 197, 0.5), rgba(255, 183, 197, 0) 50%);
+        }
+
+        /* Sad: rain streaks */
+        body.theme-sad #bg-decor {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M12 54l4-8M30 62l4-8M48 44l3-6M64 30l3-6' stroke='white' stroke-width='2.5' stroke-linecap='round' opacity='0.4' fill='none'/%3E%3Cpath d='M52 24c1.8 3.4 4.4 6 4.4 8.6a4.4 4.4 0 1 1-8.8 0c0-2.6 2.6-5.2 4.4-8.6z' fill='white' fill-opacity='0.35'/%3E%3Ccircle cx='24' cy='16' r='1.2' fill='white' fill-opacity='0.35'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at 50% -10%, rgba(121, 134, 203, 0.5), rgba(121, 134, 203, 0) 60%),
+                radial-gradient(circle at 85% 90%, rgba(159, 168, 218, 0.4), rgba(159, 168, 218, 0) 50%);
+        }
+
+        /* Meh: deliberately boring dots */
+        body.theme-meh #bg-decor {
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='20' cy='20' r='1.6' fill='white' fill-opacity='0.3'/%3E%3Ccircle cx='60' cy='44' r='1.4' fill='white' fill-opacity='0.28'/%3E%3Ccircle cx='38' cy='64' r='1.2' fill='white' fill-opacity='0.25'/%3E%3Ccircle cx='68' cy='14' r='1.1' fill='white' fill-opacity='0.22'/%3E%3Cpath d='M12 52h9' stroke='white' stroke-width='2' stroke-linecap='round' opacity='0.3'/%3E%3C/svg%3E"),
+                radial-gradient(circle at 25% 15%, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 45%),
+                radial-gradient(circle at 75% 85%, rgba(176, 190, 197, 0.35), rgba(176, 190, 197, 0) 50%);
+        }
+
+        /* Floating decor particles */
+        .decor-particle {
+            position: absolute;
+            animation: decorFloat 9s ease-in-out infinite;
+            user-select: none;
+        }
+        .decor-particle.rain {
+            top: -8%;
+            animation: decorFall linear infinite;
+        }
+        @keyframes decorFloat {
+            0%, 100% { transform: translateY(0) rotate(-4deg); }
+            50% { transform: translateY(-22px) rotate(6deg); }
+        }
+        @keyframes decorFall {
+            from { transform: translateY(0); }
+            to { transform: translateY(125vh); }
+        }
+
+        /* --- Animations --- */
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Components --- */
+        .btn {
+            background: var(--white);
+            color: var(--primary-pink);
+            border: 2px solid var(--primary-pink);
+            padding: 12px 28px;
+            border-radius: var(--radius-btn);
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 183, 197, 0.3);
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-primary { background: var(--primary-pink); color: var(--white); border: none; }
+        .btn-small { padding: 8px 20px; font-size: 0.9rem; }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-main);
+            padding: 25px;
+            margin: 15px 0;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.5s ease forwards;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .bunny-svg { width: 140px; height: 140px; display: block; margin: 0 auto; }
+        .bunny-face { fill: var(--bunny-grey); }
+        .bunny-ear { fill: var(--bunny-ear-pink); }
+        .bunny-ear-inner { fill: var(--bunny-grey); }
+        .bunny-eye { fill: #333; }
+        .bunny-nose { fill: var(--primary-pink); }
+
+        .screen { display: none; padding: 20px; animation: fadeIn 0.4s ease; }
+        .screen.active { display: block; }
+
+        /* --- Splash --- */
+        #splash-screen {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; text-align: center; background: var(--primary-pink);
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            cursor: pointer;
+            animation: splashFailsafe .5s 3.5s forwards;
+        }
+        @keyframes splashFailsafe {
+            to { opacity: 0; visibility: hidden; pointer-events: none; }
+        }
+        #splash-screen .bunny-svg { margin-bottom: 20px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); }
+        #splash-screen h1 { font-size: 3rem; color: var(--white); margin-bottom: 5px; letter-spacing: 2px; }
+        #splash-screen > p { font-size: 1rem; color: rgba(255,255,255,0.9); }
+
+        #skip-hint {
+            position: absolute; bottom: 40px; font-size: 0.85rem;
+            color: rgba(255,255,255,0.75); font-family: 'Quicksand', sans-serif;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+        /* --- Onboarding --- */
+        .onboarding-slide { text-align: center; padding: 40px 20px; }
+        .onboarding-emoji { font-size: 100px; margin-bottom: 20px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
+
+        /* --- Home --- */
+        .header-greeting { font-family: 'Fredoka', sans-serif; font-size: 1.6rem; margin-bottom: 5px; color: var(--text-brown); }
+        .bunny-home { text-align: center; margin: 30px 0; position: relative; }
+        .bunny-wrapper { position: relative; display: inline-block; }
+        .reaction-emoji { position: absolute; top: 0; right: -20px; font-size: 2.5rem; animation: float 2s infinite ease-in-out; }
+
+        .mood-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .mood-btn {
+            background: var(--white); border: 2px solid transparent; border-radius: 20px;
+            padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .mood-btn.selected { border-color: var(--primary-pink); background: #FFF5F7; transform: scale(1.02); }
+        .mood-emoji { font-size: 1.8rem; }
+        .mood-label { font-size: 1rem; font-family: 'Fredoka', sans-serif; color: var(--text-brown); }
+
+        /* --- Check-in --- */
+        .needs-options { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        textarea {
+            width: 100%; height: 100px; padding: 15px;
+            border: 2px solid #eee; border-radius: var(--radius-main);
+            background: var(--white); color: var(--text-brown);
+            font-family: 'Quicksand', sans-serif; resize: none; margin: 15px 0; outline: none;
+        }
+        textarea:focus { border-color: var(--primary-pink); }
+
+        .rating-stars { font-size: 2.2rem; text-align: center; margin: 15px 0; cursor: pointer; letter-spacing: 5px; user-select: none; }
+        .star { color: #ddd; transition: 0.2s; }
+        .star.filled { color: #FFD700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+
+        /* --- Garden --- */
+        .garden-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 0; }
+        .garden-spot {
+            aspect-ratio: 1; background: rgba(255,255,255,0.4); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; cursor: pointer; transition: 0.3s;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        .garden-spot:hover { transform: scale(1.1) rotate(5deg); background: var(--white); }
+        .garden-bunny-area { text-align: center; padding: 20px; animation: float 6s infinite; }
+
+        /* --- Calendar --- */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; margin-top: 10px; }
+        .cal-day { padding: 8px 2px; border-radius: 12px; font-size: 0.9rem; position: relative; cursor: pointer; }
+        .cal-header { font-weight: 700; color: var(--text-grey); padding: 5px; font-family: 'Fredoka', sans-serif; }
+        .cal-mood { font-size: 1.1rem; display: block; }
+        .cal-day.today { background: var(--primary-pink); color: var(--white); font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+
+        /* --- Journal --- */
+        .journal-item { border-left: 5px solid var(--primary-pink); margin-bottom: 15px; cursor: pointer; }
+        .journal-date { font-size: 0.85rem; color: var(--text-grey); font-family: 'Fredoka', sans-serif; }
+        .journal-mood { float: right; font-size: 1.5rem; }
+
+        /* --- Bunny / Accessories --- */
+        .profile-header { text-align: center; padding: 20px; }
+        .profile-stats { display: flex; justify-content: space-around; margin: 20px 0; }
+        .stat-item { text-align: center; }
+        .stat-val { font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: var(--primary-pink); display: block; }
+        .stat-label { font-size: 0.8rem; color: var(--text-grey); text-transform: uppercase; letter-spacing: 1px; }
+
+        .bunny-preview-area { position: relative; display: inline-block; }
+        .bunny-wear { position: absolute; font-size: 2.6rem; z-index: 10; pointer-events: none; }
+
+        .accessories-grid { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+        .acc-item { text-align: center; cursor: pointer; }
+        .acc-btn {
+            font-size: 1.6rem; width: 54px; height: 54px; display: flex; align-items: center;
+            justify-content: center; border-radius: 50%; background: var(--white);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 3px solid transparent; transition: 0.2s;
+        }
+        .acc-btn.selected { border-color: var(--primary-pink); background: #FFF5F7; transform: scale(1.08); }
+        .acc-label { font-size: 0.7rem; margin-top: 4px; color: var(--text-grey); font-family: 'Fredoka', sans-serif; }
+
+        /* --- Navigation --- */
+        .nav-bar {
+            position: fixed; bottom: 0; width: 100%; max-width: 420px;
+            background: var(--white); display: flex; justify-content: space-around;
+            padding: 12px 0; border-radius: 30px 30px 0 0;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.05); z-index: 100;
+        }
+        .nav-item {
+            font-size: 1.5rem; color: #ccc; cursor: pointer; position: relative;
+            transition: 0.3s; display: flex; flex-direction: column; align-items: center;
+        }
+        .nav-item.active { color: var(--primary-pink); transform: translateY(-5px); }
+        .nav-label { font-family: 'Fredoka', sans-serif; font-size: 0.6rem; margin-top: 4px; }
+
+        /* --- Toast --- */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: var(--text-brown); color: #fff;
+            text-align: center; border-radius: 50px; padding: 14px; position: fixed;
+            z-index: 999; left: 50%; bottom: 90px; transform: translateX(-50%);
+            font-size: 0.9rem; font-family: 'Quicksand', sans-serif;
+            opacity: 0; transition: opacity 0.3s, bottom 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        #toast.show { visibility: visible; opacity: 1; bottom: 100px; }
+
+        /* --- Modal --- */
+        .modal {
+            display: none; position: fixed; z-index: 200; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.4);
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-content {
+            background-color: var(--bg-pink); color: var(--text-brown);
+            padding: 30px; border-radius: var(--radius-main); width: 100%; max-width: 380px;
+            position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1); text-align: center;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-grey); }
+
+        /* --- Search --- */
+        .search-bar { width: 100%; padding: 12px 20px; border-radius: 50px; border: none; margin-bottom: 20px; background: var(--white); color: var(--text-brown); font-family: 'Quicksand', sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.03); outline: none; }
+
+        /* --- Chart --- */
+        .chart-container { display: flex; align-items: flex-end; gap: 6px; margin-top: 10px; }
+        .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; }
+        .bar-track { height: 110px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+        .bar { width: 60%; max-width: 26px; background: var(--primary-pink); border-radius: 8px 8px 0 0; transition: height 0.6s ease; min-height: 4px; opacity: 0.85; }
+        .bar:hover { opacity: 1; }
+        .bar-count { font-size: 0.65rem; color: var(--text-grey); margin-bottom: 3px; }
+        .bar-label { font-size: 0.9rem; margin-top: 6px; }
+    </style>
+</head>
+<body>
+
+<!-- Mood background decor (patterns + floating emojis) -->
+<div id="bg-decor" aria-hidden="true"></div>
+
+<div id="app-container">
+
+    <!-- 1. Splash -->
+    <div id="splash-screen" onclick="skipSplash()">
+        <svg class="bunny-svg" viewBox="0 0 100 100">
+            <ellipse class="bunny-ear" cx="30" cy="30" rx="12" ry="28" />
+            <ellipse class="bunny-ear-inner" cx="30" cy="30" rx="6" ry="20" />
+            <ellipse class="bunny-ear" cx="70" cy="30" rx="12" ry="28" />
+            <ellipse class="bunny-ear-inner" cx="70" cy="30" rx="6" ry="20" />
+            <circle class="bunny-face" cx="50" cy="60" r="35" />
+            <circle class="bunny-eye" cx="40" cy="55" r="3" />
+            <circle class="bunny-eye" cx="60" cy="55" r="3" />
+            <ellipse class="bunny-nose" cx="50" cy="65" rx="3" ry="2" />
+            <path d="M 45 70 Q 50 75 55 70" stroke="#999" stroke-width="2" fill="none" stroke-linecap="round" />
+            <circle cx="35" cy="65" r="4" fill="#FFC0CB" opacity="0.6" />
+            <circle cx="65" cy="65" r="4" fill="#FFC0CB" opacity="0.6" />
+        </svg>
+        <h1>Moodsie</h1>
+        <p>A tiny space for all your feelings ♡</p>
+        <p id="skip-hint">tap anywhere to skip ♡</p>
+    </div>
+
+    <!-- 2. Onboarding -->
+    <div id="onboarding-screen" class="screen">
+        <div class="onboarding-slide">
+            <span class="onboarding-emoji">🌸</span>
+            <h2>How are you feeling today?</h2>
+            <p style="color:var(--text-grey); margin-top:10px;">Let's track your emotions and grow your garden.</p>
+        </div>
+        <div class="onboarding-slide" style="display:none;">
+            <span class="onboarding-emoji">🌻</span>
+            <h2>Every feeling gets a flower.</h2>
+            <p style="color:var(--text-grey); margin-top:10px;">Check in daily to plant seeds.</p>
+        </div>
+        <div class="onboarding-slide" style="display:none;">
+            <span class="onboarding-emoji">💌</span>
+            <h2>Your moments stay here.</h2>
+            <p style="color:var(--text-grey); margin-top:10px;">Keep a journal and look back.</p>
+        </div>
+        <div style="text-align: center; margin-top: 40px;">
+            <button class="btn btn-primary" id="next-onboard">Next</button>
+            <button class="btn btn-primary" id="finish-onboard" style="display:none;">Let's begin ♡</button>
+        </div>
+    </div>
+
+    <!-- 3. Home -->
+    <div id="home-screen" class="screen">
+        <div class="header-greeting" id="header-greeting">Hi, lovely! 🎀</div>
+        <p style="color:var(--text-grey);">How are you feeling today?</p>
+
+        <div id="home-bunny-container" class="bunny-home">
+            <div class="bunny-wrapper">
+                <svg class="bunny-svg" viewBox="0 0 100 100">
+                    <ellipse class="bunny-ear" cx="30" cy="30" rx="12" ry="28" />
+                    <ellipse class="bunny-ear-inner" cx="30" cy="30" rx="6" ry="20" />
+                    <ellipse class="bunny-ear" cx="70" cy="30" rx="12" ry="28" />
+                    <ellipse class="bunny-ear-inner" cx="70" cy="30" rx="6" ry="20" />
+                    <circle class="bunny-face" cx="50" cy="60" r="35" />
+                    <circle class="bunny-eye" cx="40" cy="55" r="3" />
+                    <circle class="bunny-eye" cx="60" cy="55" r="3" />
+                    <ellipse class="bunny-nose" cx="50" cy="65" rx="3" ry="2" />
+                    <path d="M 45 70 Q 50 75 55 70" stroke="#999" stroke-width="2" fill="none" stroke-linecap="round" />
+                    <circle cx="35" cy="65" r="4" fill="#FFC0CB" opacity="0.6" />
+                    <circle cx="65" cy="65" r="4" fill="#FFC0CB" opacity="0.6" />
+                </svg>
+                <div id="home-bunny-wear" class="bunny-wear"></div>
+                <div id="home-bunny-reaction" class="reaction-emoji"></div>
+            </div>
+        </div>
+
+        <div id="mood-selection-area">
+            <div class="mood-grid" id="mood-grid"></div>
+            <div style="text-align: center; margin-top: 25px;">
+                <button class="btn btn-small" onclick="showSurprise()">✨ Surprise Me</button>
+            </div>
+        </div>
+
+        <div id="needs-area" class="card" style="display:none;">
+            <h3 id="mood-response-title" style="margin-bottom:10px; color:var(--primary-pink);"></h3>
+            <p style="font-size:0.9rem; margin-bottom:15px;">What do you need right now?</p>
+            <div class="needs-options" id="needs-options"></div>
+        </div>
+
+        <div id="check-in-area" class="card" style="display:none;">
+            <h3>How was your day?</h3>
+            <textarea id="journal-note" placeholder="Write a little note... ✍️"></textarea>
+
+            <div class="rating-stars" id="rating-stars">
+                <span class="star" data-val="1">★</span>
+                <span class="star" data-val="2">★</span>
+                <span class="star" data-val="3">★</span>
+                <span class="star" data-val="4">★</span>
+                <span class="star" data-val="5">★</span>
+            </div>
+
+            <div style="display: flex; gap: 20px; justify-content: center; color: var(--primary-pink); font-size: 1.5rem;">
+                <span style="cursor:pointer;" onclick="toggleExtra('photo')">📸</span>
+                <span style="cursor:pointer;" onclick="toggleExtra('music')">🎵</span>
+            </div>
+            <div id="extra-status" style="text-align: center; font-size: 0.8rem; margin-top: 8px; color: var(--text-grey); min-height: 1em;"></div>
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 25px;" onclick="saveEntry()">Save my day ♡</button>
+        </div>
+    </div>
+
+    <!-- 4. Garden -->
+    <div id="garden-screen" class="screen">
+        <h2>My Garden 🌷</h2>
+        <p style="font-size: 0.9rem; color:var(--text-grey);">Tap a flower to see the memory.</p>
+        <div class="garden-grid" id="garden-grid"></div>
+        <div class="garden-bunny-area">
+            <div style="font-size:2.5rem;">🐰</div>
+        </div>
+    </div>
+
+    <!-- 5. Calendar -->
+    <div id="calendar-screen" class="screen">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom:20px;">
+            <button class="btn btn-small" onclick="changeMonth(-1)">◀</button>
+            <h2 id="cal-month-year" style="color:var(--primary-pink);">Month Year</h2>
+            <button class="btn btn-small" onclick="changeMonth(1)">▶</button>
+        </div>
+        <div class="calendar-grid">
+            <div class="cal-header">M</div><div class="cal-header">T</div><div class="cal-header">W</div>
+            <div class="cal-header">T</div><div class="cal-header">F</div><div class="cal-header">S</div><div class="cal-header">S</div>
+        </div>
+        <div class="calendar-grid" id="calendar-days"></div>
+    </div>
+
+    <!-- 6. Journal -->
+    <div id="journal-screen" class="screen">
+        <h2>Journal 📖</h2>
+        <input type="text" class="search-bar" placeholder="Search memories..." onkeyup="searchJournal(this.value)">
+        <div id="journal-list"></div>
+    </div>
+
+    <!-- 7. Bunny -->
+    <div id="bunny-screen" class="screen">
+        <h2>My Bunny 🐰</h2>
+        <div class="profile-header">
+            <div class="bunny-preview-area">
+                <div class="bunny-wear" id="bunny-wear"></div>
+                <svg class="bunny-svg" viewBox="0 0 100 100">
+                    <ellipse class="bunny-ear" cx="30" cy="30" rx="12" ry="28" />
+                    <ellipse class="bunny-ear-inner" cx="30" cy="30" rx="6" ry="20" />
+                    <ellipse class="bunny-ear" cx="70" cy="30" rx="12" ry="28" />
+                    <ellipse class="bunny-ear-inner" cx="70" cy="30" rx="6" ry="20" />
+                    <circle class="bunny-face" cx="50" cy="60" r="35" />
+                    <circle class="bunny-eye" cx="40" cy="55" r="3" />
+                    <circle class="bunny-eye" cx="60" cy="55" r="3" />
+                    <ellipse class="bunny-nose" cx="50" cy="65" rx="3" ry="2" />
+                    <path d="M 45 70 Q 50 75 55 70" stroke="#999" stroke-width="2" fill="none" stroke-linecap="round" />
+                    <circle cx="35" cy="65" r="4" fill="#FFC0CB" opacity="0.6" />
+                    <circle cx="65" cy="65" r="4" fill="#FFC0CB" opacity="0.6" />
+                </svg>
+            </div>
+            <p style="margin-top:10px; color:var(--text-grey);">Dress up your friend!</p>
+        </div>
+        <h3>Accessories</h3>
+        <div class="accessories-grid" id="accessories-list"></div>
+    </div>
+
+    <!-- 8. Profile -->
+    <div id="profile-screen" class="screen">
+        <h2>Me ✨</h2>
+        <div class="card">
+            <div class="profile-stats">
+                <div class="stat-item"><span class="stat-val" id="stat-flowers">0</span><span class="stat-label">Flowers</span></div>
+                <div class="stat-item"><span class="stat-val" id="stat-streak">0</span><span class="stat-label">Streak 🔥</span></div>
+                <div class="stat-item"><span class="stat-val" id="stat-entries">0</span><span class="stat-label">Memories</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Mood Statistics 📊</h3>
+            <div class="chart-container" id="mood-chart"></div>
+        </div>
+
+        <div class="card">
+            <h3>Achievements 🏆</h3>
+            <div id="achievements-list" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"></div>
+        </div>
+
+        <div class="card">
+            <h3>Settings ⚙️</h3>
+            <button class="btn btn-small" onclick="resetData()" style="background: #FFCDD2; color: #B71C1C; width: 100%; border:none;">Reset All Data</button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="nav-item active" onclick="switchTab('home')">🏠 <span class="nav-label">Home</span></div>
+        <div class="nav-item" onclick="switchTab('garden')">🌷 <span class="nav-label">Garden</span></div>
+        <div class="nav-item" onclick="switchTab('calendar')">📅 <span class="nav-label">Calendar</span></div>
+        <div class="nav-item" onclick="switchTab('journal')">📖 <span class="nav-label">Journal</span></div>
+        <div class="nav-item" onclick="switchTab('bunny')">🐰 <span class="nav-label">Bunny</span></div>
+        <div class="nav-item" onclick="switchTab('profile')">✨ <span class="nav-label">Me</span></div>
+    </nav>
+
+</div>
+
+<!-- Modals -->
+<div id="detail-modal" class="modal" onclick="if(event.target === this) closeModal()">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    /* --- Data & Config --- */
+    const MOODS = [
+        { id: 'tired', emoji: '😴', label: 'Tired', theme: 'theme-tired', flower: '🌙', response: 'Looks like you need a little rest. 🌙' },
+        { id: 'good', emoji: '😎', label: 'Good', theme: 'theme-good', flower: '🌻', response: 'You are glowing today! ✨' },
+        { id: 'emotional', emoji: '😭', label: 'Emotional', theme: 'theme-emotional', flower: '💧', response: 'It is okay to feel deeply. 🌧️' },
+        { id: 'motivated', emoji: '🔥', label: 'Motivated', theme: 'theme-motivated', flower: '🌹', response: 'Let\'s conquer the world! 💪' },
+        { id: 'angry', emoji: '😤', label: 'Angry', theme: 'theme-angry', flower: '🌋', response: 'Take a deep breath. It will pass. 🌬️' },
+        { id: 'happy', emoji: '🥰', label: 'Happy', theme: 'theme-happy', flower: '🌷', response: 'Your joy is contagious! 💕' },
+        { id: 'sad', emoji: '😔', label: 'Sad', theme: 'theme-sad', flower: '🥀', response: 'Sending you a virtual hug. 🤗' },
+        { id: 'meh', emoji: '😐', label: 'Meh', theme: 'theme-meh', flower: '🍄', response: 'Neutral days are part of life too. ☕' }
+    ];
+
+    const NEEDS = ['😴 Rest', '☕ Energy', '🫂 Comfort', '🎵 Music', '🚶 Walk', '💬 Talk', '🍫 Snack', '🎮 Game'];
+    const ACTIVITIES = ['Drink water 💧', 'Stretch for 5 min 🧘', 'Text a friend 📱', 'Take a photo 📸', 'Doodle 🎨', 'Do nothing for 2 mins ⏳'];
+
+    const ACC_LIST = [
+        { value: '',   icon: '',   label: 'None' },
+        { value: '🎀', icon: '🎀', label: 'Bow',     top: 2,   left: 26 },
+        { value: '👒', icon: '👒', label: 'Hat',     top: -16, left: 50 },
+        { value: '🌸', icon: '🌸', label: 'Crown',   top: -14, left: 50 },
+        { value: '🧸', icon: '🧸', label: 'Teddy',   top: 58,  left: 96, shift: true },
+        { value: '👓', icon: '👓', label: 'Glasses', top: 56,  left: 50 }
+    ];
+
+    /* Floating background emojis per mood */
+    const MOOD_DECOR = {
+        tired:     ['🌙', '💤', '⭐', '✨'],
+        good:      ['☀️', '✨', '🌟', '😎'],
+        emotional: ['😭', '💧', '🌧️', '💔'],
+        motivated: ['⚡', '🔥', '💪', '✨'],
+        angry:     ['💢', '💥', '🌪️', '🔥'],
+        happy:     ['💕', '🌸', '✨', '💖'],
+        sad:       ['😔', '💧', '🌧️', '🥀'],
+        meh:       ['😐', '☁️', '💤', '🌫️']
+    };
+    const DEFAULT_DECOR = ['🌸', '✨', '🎀', '💗'];
+
+    let appState = {
+        entries: [],
+        currentAccessory: '',
+        streak: 0,
+        lastCheckIn: null,
+        onboardingDone: false
+    };
+
+    let currentMood = null;
+    let currentDate = new Date();
+    let tempRating = 0;
+    let appReady = false;
+    const extras = { photo: false, music: false };
+
+    /* --- Helpers --- */
+    function toISODate(d) {
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+    function todayISO() { return toISODate(new Date()); }
+    function esc(s) { return String(s || '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c])); }
+    function prettyDate(dateStr) {
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+
+    /* --- Background Decor: floating emojis per mood --- */
+    function setDecor(moodId) {
+        const decor = document.getElementById('bg-decor');
+        if (!decor) return;
+        decor.innerHTML = '';
+        const rainy = (moodId === 'sad' || moodId === 'emotional');
+        const list = (moodId && MOOD_DECOR[moodId]) ? MOOD_DECOR[moodId] : DEFAULT_DECOR;
+        const count = rainy ? 14 : 11;
+        for (let i = 0; i < count; i++) {
+            const s = document.createElement('span');
+            s.className = 'decor-particle' + (rainy ? ' rain' : '');
+            s.textContent = list[Math.floor(Math.random() * list.length)];
+            s.style.left = (Math.random() * 96) + '%';
+            const dur = rainy ? (8 + Math.random() * 7) : (6 + Math.random() * 8);
+            s.style.animationDuration = dur.toFixed(1) + 's';
+            s.style.animationDelay = (-Math.random() * dur).toFixed(1) + 's';
+            if (rainy) {
+                s.style.fontSize = (12 + Math.random() * 14).toFixed(0) + 'px';
+                s.style.opacity = (0.22 + Math.random() * 0.25).toFixed(2);
+            } else {
+                s.style.top = (Math.random() * 92).toFixed(0) + '%';
+                const size = 16 + Math.random() * 24;
+                s.style.fontSize = size.toFixed(0) + 'px';
+                s.style.opacity = (0.15 + Math.random() * 0.25).toFixed(2);
+                if (size > 30 && Math.random() < 0.6) s.style.filter = 'blur(1.5px)';
+            }
+            decor.appendChild(s);
+        }
+    }
+
+    /* ============================================================
+       BOOT — runs immediately (no window.onload → no stuck splash)
+       ============================================================ */
+    (function boot() {
+        try { loadData(); } catch (e) {}
+        try { validateStreak(); } catch (e) {}
+        try { updateGreeting(); } catch (e) {}
+        try { initMoodGrid(); } catch (e) {}
+        try { initRating(); } catch (e) {}
+        try { initAccessories(); } catch (e) {}
+        try { setDecor(null); } catch (e) {}
+        setTimeout(checkAppReady, 1800);
+    })();
+
+    window.onerror = function () {
+        try { document.getElementById('splash-screen').style.display = 'none'; } catch (e) {}
+        return false;
+    };
+
+    function skipSplash() { checkAppReady(); }
+
+    function checkAppReady() {
+        if (appReady) return;
+        appReady = true;
+        const splash = document.getElementById('splash-screen');
+        splash.style.animation = 'none';
+        splash.style.transition = 'opacity .35s ease';
+        splash.style.opacity = '0';
+        setTimeout(function () { splash.style.display = 'none'; }, 380);
+
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        if (!appState.onboardingDone) {
+            document.getElementById('onboarding-screen').classList.add('active');
+        } else {
+            document.getElementById('home-screen').classList.add('active');
+        }
+    }
+
+    /* --- Persistence --- */
+    function saveData() {
+        try { localStorage.setItem('moodsieData', JSON.stringify(appState)); } catch (e) {}
+        try { updateStats(); } catch (e) {}
+    }
+    function loadData() {
+        try {
+            const data = localStorage.getItem('moodsieData');
+            if (data) appState = Object.assign(appState, JSON.parse(data));
+        } catch (e) {}
+    }
+    function resetData() {
+        if (confirm('Are you sure? This will delete all your memories 🌷')) {
+            try { localStorage.removeItem('moodsieData'); } catch (e) {}
+            location.reload();
+        }
+    }
+
+    /* --- Streak validation --- */
+    function validateStreak() {
+        if (!appState.lastCheckIn) return;
+        const y = new Date(); y.setDate(y.getDate() - 1);
+        const stillValid = (appState.lastCheckIn === todayISO() || appState.lastCheckIn === toISODate(y));
+        if (!stillValid && appState.streak !== 0) {
+            appState.streak = 0;
+            saveData();
+        }
+    }
+
+    /* --- Onboarding --- */
+    let onboardingStep = 0;
+    document.getElementById('next-onboard').addEventListener('click', () => {
+        const slides = document.querySelectorAll('.onboarding-slide');
+        if (onboardingStep >= slides.length - 1) return;
+        slides[onboardingStep].style.display = 'none';
+        onboardingStep++;
+        slides[onboardingStep].style.display = 'block';
+        if (onboardingStep === slides.length - 1) {
+            document.getElementById('next-onboard').style.display = 'none';
+            document.getElementById('finish-onboard').style.display = 'inline-block';
+        }
+    });
+
+    document.getElementById('finish-onboard').addEventListener('click', () => {
+        appState.onboardingDone = true;
+        saveData();
+        switchTab('home');
+    });
+
+    /* --- Navigation --- */
+    function switchTab(tabId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(tabId + '-screen').classList.add('active');
+
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const tabs = ['home', 'garden', 'calendar', 'journal', 'bunny', 'profile'];
+        const index = tabs.indexOf(tabId);
+        if (index >= 0) document.querySelectorAll('.nav-item')[index].classList.add('active');
+
+        if (tabId === 'garden') renderGarden();
+        if (tabId === 'calendar') renderCalendar();
+        if (tabId === 'journal') renderJournal();
+        if (tabId === 'bunny') initAccessories();
+        if (tabId === 'profile') updateStats();
+    }
+
+    /* --- Home & Mood Logic --- */
+    function updateGreeting() {
+        const h = new Date().getHours();
+        let g = 'Hi, night owl! 🌙';
+        if (h >= 5 && h < 12) g = 'Good morning, lovely! 🌸';
+        else if (h >= 12 && h < 17) g = 'Good afternoon, lovely! ☀️';
+        else if (h >= 17 && h < 21) g = 'Good evening, lovely! 🌆';
+        document.getElementById('header-greeting').innerText = g;
+    }
+
+    function initMoodGrid() {
+        document.getElementById('mood-grid').innerHTML = MOODS.map(m => `
+            <div class="mood-btn" onclick="selectMood('${m.id}', this)">
+                <span class="mood-emoji">${m.emoji}</span>
+                <span class="mood-label">${m.label}</span>
+            </div>
+        `).join('');
+    }
+
+    function selectMood(id, el) {
+        currentMood = MOODS.find(m => m.id === id);
+        if (!currentMood) return;
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+        if (el) el.classList.add('selected');
+        document.body.className = currentMood.theme;
+        setDecor(id);
+        updateBunnyHome(id);
+
+        document.getElementById('mood-response-title').innerText = currentMood.response;
+        document.getElementById('needs-options').innerHTML =
+            NEEDS.map(n => `<button class="btn btn-small" onclick="selectNeed('${n}')">${n}</button>`).join('');
+        const needsDiv = document.getElementById('needs-area');
+        needsDiv.style.display = 'block';
+        document.getElementById('check-in-area').style.display = 'block';
+        needsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function updateBunnyHome(moodId) {
+        const reactionEl = document.getElementById('home-bunny-reaction');
+        if (!moodId) { reactionEl.innerText = ''; return; }
+        const reactions = { 'tired': '💤', 'happy': '♡', 'angry': '💢', 'motivated': '✨', 'sad': '💧', 'good': '😎', 'emotional': '😭', 'meh': '☁️' };
+        reactionEl.innerText = reactions[moodId] || '';
+    }
+
+    function selectNeed(need) { showToast(`Selected: ${need}`); }
+    function showSurprise() {
+        const act = ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)];
+        showModal('✨ Surprise Activity', `<div style="font-size:1.3rem; padding:20px;">${act}</div>`);
+    }
+
+    /* --- Check-in --- */
+    function initRating() {
+        document.querySelectorAll('.star').forEach(s => {
+            s.addEventListener('click', () => {
+                tempRating = parseInt(s.dataset.val);
+                document.querySelectorAll('.star').forEach(x => {
+                    x.classList.toggle('filled', parseInt(x.dataset.val) <= tempRating);
+                });
+            });
+        });
+    }
+
+    function toggleExtra(type) {
+        extras[type] = !extras[type];
+        const parts = [];
+        if (extras.photo) parts.push('📸 Photo added');
+        if (extras.music) parts.push('🎵 Music linked');
+        document.getElementById('extra-status').innerText = parts.join(' · ');
+    }
+
+    function saveEntry() {
+        if (!currentMood) { showToast('Please pick a mood first! 🌸'); return; }
+        const note = document.getElementById('journal-note').value;
+        const todayStr = todayISO();
+        const existingIndex = appState.entries.findIndex(e => e.date === todayStr);
+
+        const entry = { date: todayStr, moodId: currentMood.id, note: note, rating: tempRating, flower: currentMood.flower };
+        if (existingIndex >= 0) appState.entries[existingIndex] = entry;
+        else { appState.entries.push(entry); checkStreak(todayStr); }
+
+        saveData();
+
+        // Reset for next check-in (back to sakura default decor)
+        document.getElementById('journal-note').value = '';
+        document.getElementById('extra-status').innerText = '';
+        extras.photo = false; extras.music = false;
+        tempRating = 0;
+        document.querySelectorAll('.star').forEach(x => x.classList.remove('filled'));
+        document.getElementById('check-in-area').style.display = 'none';
+        document.getElementById('needs-area').style.display = 'none';
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+        currentMood = null;
+        updateBunnyHome(null);
+        document.body.className = '';
+        setDecor(null);
+
+        showToast('Saved to your garden! 🌱✨');
+        setTimeout(() => switchTab('garden'), 900);
+    }
+
+    function checkStreak(dateStr) {
+        const y = new Date(); y.setDate(y.getDate() - 1);
+        const yStr = toISODate(y);
+        if (appState.lastCheckIn === yStr) appState.streak++;
+        else if (appState.lastCheckIn !== dateStr) appState.streak = 1;
+        appState.lastCheckIn = dateStr;
+    }
+
+    /* --- Garden --- */
+    function renderGarden() {
+        const container = document.getElementById('garden-grid');
+        if (!appState.entries.length) {
+            container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--text-grey);padding:20px;">No flowers planted yet — check in to grow one 🌱</p>';
+            return;
+        }
+        container.innerHTML = '';
+        appState.entries.slice().reverse().slice(0, 20).forEach(entry => {
+            const mood = MOODS.find(m => m.id === entry.moodId);
+            const el = document.createElement('div');
+            el.className = 'garden-spot';
+            el.title = prettyDate(entry.date);
+            el.innerText = mood ? mood.flower : '🌱';
+            el.onclick = () => showEntryDetail(entry);
+            container.appendChild(el);
+        });
+    }
+
+    /* --- Calendar --- */
+    function renderCalendar() {
+        const year = currentDate.getFullYear(), month = currentDate.getMonth();
+        document.getElementById('cal-month-year').innerText =
+            new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const grid = document.getElementById('calendar-days');
+        const tStr = todayISO();
+
+        let html = '';
+        let startCol = firstDay === 0 ? 6 : firstDay - 1;
+        for (let i = 0; i < startCol; i++) html += '<div></div>';
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const entry = appState.entries.find(e => e.date === dateStr);
+            const mood = entry ? MOODS.find(m => m.id === entry.moodId) : null;
+            html += `<div class="cal-day ${dateStr === tStr ? 'today' : ''}" onclick="viewDay('${dateStr}')">${d}${mood ? `<span class="cal-mood">${mood.emoji}</span>` : ''}</div>`;
+        }
+        grid.innerHTML = html;
+    }
+    function changeMonth(dir) { currentDate.setMonth(currentDate.getMonth() + dir); renderCalendar(); }
+    function viewDay(dateStr) {
+        const entry = appState.entries.find(e => e.date === dateStr);
+        if (entry) showEntryDetail(entry);
+        else showToast('No memory saved this day 🌱');
+    }
+
+    /* --- Journal --- */
+    function renderJournal() {
+        const list = document.getElementById('journal-list');
+        const sorted = appState.entries.slice().reverse();
+        if (!sorted.length) {
+            list.innerHTML = '<p style="text-align:center;color:var(--text-grey);margin-top:20px;">No memories yet — your first flower is waiting 🌱</p>';
+            return;
+        }
+        list.innerHTML = sorted.map(e => {
+            const mood = MOODS.find(m => m.id === e.moodId);
+            return `<div class="card journal-item" onclick="showEntryDetail(appState.entries.find(x => x.date === '${e.date}'))">
+                <div class="journal-mood">${mood ? mood.emoji : ''}</div>
+                <div class="journal-date">${prettyDate(e.date)}</div>
+                <p style="margin-top:5px;">${esc(e.note) || 'No note...'}</p>
+            </div>`;
+        }).join('');
+    }
+    function searchJournal(query) {
+        document.querySelectorAll('.journal-item').forEach(item => {
+            item.style.display = item.innerText.toLowerCase().includes(query.toLowerCase()) ? 'block' : 'none';
+        });
+    }
+
+    /* --- Bunny & Accessories --- */
+    function initAccessories() {
+        const container = document.getElementById('accessories-list');
+        container.innerHTML = ACC_LIST.map(a => `
+            <div class="acc-item" onclick="equipAccessory('${a.value}')">
+                <div class="acc-btn ${appState.currentAccessory === a.value ? 'selected' : ''}">${a.icon || '🚫'}</div>
+                <div class="acc-label">${a.label}</div>
+            </div>`).join('');
+        applyWear('bunny-wear');
+        applyWear('home-bunny-wear');
+    }
+
+    function equipAccessory(value) {
+        appState.currentAccessory = value;
+        saveData();
+        initAccessories();
+    }
+
+    function applyWear(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const acc = ACC_LIST.find(a => a.value === appState.currentAccessory) || ACC_LIST[0];
+        el.innerText = acc.icon;
+        el.style.top = (acc.top !== undefined ? acc.top : 50) + 'px';
+        el.style.left = (acc.left !== undefined ? acc.left : 50) + '%';
+        el.style.transform = acc.shift ? 'translateX(-100%)' : 'translateX(-50%)';
+    }
+
+    /* --- Stats --- */
+    function updateStats() {
+        document.getElementById('stat-flowers').innerText = appState.entries.length;
+        document.getElementById('stat-streak').innerText = appState.streak;
+        document.getElementById('stat-entries').innerText = appState.entries.length;
+        renderChart();
+        renderAchievements();
+    }
+
+    function renderChart() {
+        const now = new Date();
+        const counts = {}; MOODS.forEach(m => counts[m.id] = 0);
+        appState.entries.forEach(e => {
+            const d = new Date(e.date + 'T00:00:00');
+            if (d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()) counts[e.moodId]++;
+        });
+        const values = Object.values(counts);
+        const total = values.reduce((a, b) => a + b, 0);
+        const chart = document.getElementById('mood-chart');
+        if (!total) {
+            chart.innerHTML = '<p style="color:var(--text-grey); font-size:0.85rem; padding:20px 0;">No check-ins this month yet 🌱</p>';
+            return;
+        }
+        const maxVal = Math.max(...values);
+        chart.innerHTML = MOODS.map(m => {
+            const pct = Math.min(Math.max(Math.round((counts[m.id] / maxVal) * 100), 5), 85);
+            return `<div class="chart-col" title="${counts[m.id]} × ${m.label}">
+                <div class="bar-track">
+                    ${counts[m.id] ? `<div class="bar-count">${counts[m.id]}</div>` : ''}
+                    <div class="bar" style="height:${pct}%"></div>
+                </div>
+                <div class="bar-label">${m.emoji}</div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderAchievements() {
+        const badges = [
+            { icon: '🏆', text: 'First', check: () => appState.entries.length > 0 },
+            { icon: '🦋', text: 'Week', check: () => appState.streak >= 7 },
+            { icon: '🌈', text: 'All', check: () => MOODS.every(m => appState.entries.some(e => e.moodId === m.id)) },
+            { icon: '💌', text: '10 Mem', check: () => appState.entries.length >= 10 }
+        ];
+        document.getElementById('achievements-list').innerHTML = badges.map(b => {
+            const unlocked = b.check();
+            return `<div style="text-align:center; opacity:${unlocked ? 1 : 0.4}; font-size:0.8rem; flex:1; min-width:60px;">
+                <div style="font-size:1.8rem;">${b.icon}</div>
+                <div>${b.text}</div>
+            </div>`;
+        }).join('');
+    }
+
+    /* --- Utils --- */
+    function showEntryDetail(entry) {
+        if (!entry) return;
+        const mood = MOODS.find(m => m.id === entry.moodId);
+        const stars = '★'.repeat(entry.rating) + '☆'.repeat(5 - entry.rating);
+        showModal('Memory 💌', `
+            <div style="font-size:3rem;margin-bottom:10px;">${mood ? mood.flower : '🌱'}</div>
+            <h3>${prettyDate(entry.date)}</h3>
+            <p>${mood ? mood.label + ' ' + mood.emoji : ''}</p>
+            <div style="color:#FFD700; margin:10px 0; letter-spacing:3px;">${stars}</div>
+            <div class="card" style="background:rgba(255,255,255,0.5); box-shadow:none; margin:0;">
+                <p>${esc(entry.note) || 'No note added.'}</p>
+            </div>
+            <button class="btn btn-small" style="margin-top:20px; border-color:#ffcccc; color:#ffaaaa;" onclick="deleteEntry('${entry.date}')">Delete</button>
+        `);
+    }
+
+    function deleteEntry(dateStr) {
+        if (confirm('Delete this memory?')) {
+            appState.entries = appState.entries.filter(e => e.date !== dateStr);
+            saveData();
+            closeModal();
+            if (document.getElementById('garden-screen').classList.contains('active')) renderGarden();
+            if (document.getElementById('journal-screen').classList.contains('active')) renderJournal();
+            if (document.getElementById('calendar-screen').classList.contains('active')) renderCalendar();
+            showToast('Memory deleted.');
+        }
+    }
+
+    function showModal(title, content) {
+        document.getElementById('modal-body').innerHTML = `<h2 style="margin-bottom:15px;">${title}</h2>${content}`;
+        document.getElementById('detail-modal').style.display = 'flex';
+    }
+    function closeModal() { document.getElementById('detail-modal').style.display = 'none'; }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+</script>
+</body>
+</html>
