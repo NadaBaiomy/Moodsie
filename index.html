@@ -49,7 +49,7 @@
         #app-container { width: 100%; max-width: 420px; min-height: 100vh; position: relative; z-index: 1; padding-bottom: 90px; }
 
         /* ============================================================
-           MOOD BACKGROUND DECOR — pattern + gradients + particles
+           MOOD BACKGROUND DECOR
            ============================================================ */
         #bg-decor {
             position: fixed;
@@ -60,7 +60,6 @@
             background-repeat: repeat, no-repeat, no-repeat;
         }
 
-        /* Default: soft sakura hearts */
         #bg-decor {
             background-image:
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20 29c-4.8-3.5-8-6.3-8-10a4.5 4.5 0 0 1 8-2.8 4.5 4.5 0 0 1 8 2.8c0 3.7-3.2 6.5-8 10z' fill='white' fill-opacity='0.30'/%3E%3Cpath d='M58 62c-4.2-3-7-5.5-7-8.8a3.9 3.9 0 0 1 7-2.4 3.9 3.9 0 0 1 7 2.4c0 3.3-2.8 5.8-7 8.8z' fill='white' fill-opacity='0.22'/%3E%3Ccircle cx='56' cy='16' r='1.5' fill='white' fill-opacity='0.5'/%3E%3Ccircle cx='30' cy='58' r='1.2' fill='white' fill-opacity='0.4'/%3E%3Ccircle cx='70' cy='40' r='1' fill='white' fill-opacity='0.3'/%3E%3C/svg%3E"),
@@ -68,7 +67,6 @@
                 radial-gradient(circle at 85% 90%, rgba(255, 214, 224, 0.7), rgba(255, 214, 224, 0) 55%);
         }
 
-        /* Tired: night sky + stars */
         body.theme-tired #bg-decor {
             background-image:
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M22 14l2 5 5 2-5 2-2 5-2-5-5-2 5-2z' fill='white' fill-opacity='0.5'/%3E%3Cpath d='M58 46l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z' fill='white' fill-opacity='0.35'/%3E%3Ccircle cx='60' cy='18' r='1.5' fill='white' fill-opacity='0.5'/%3E%3Ccircle cx='36' cy='62' r='1.2' fill='white' fill-opacity='0.45'/%3E%3Ccircle cx='12' cy='42' r='1' fill='white' fill-opacity='0.35'/%3E%3C/svg%3E"),
@@ -76,7 +74,6 @@
                 radial-gradient(circle at 12% 85%, rgba(100, 181, 246, 0.45), rgba(100, 181, 246, 0) 55%);
         }
 
-        /* Good: sunny sparkles */
         body.theme-good #bg-decor {
             background-image:
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20 14l2.2 5.3 5.3 2.2-5.3 2.2-2.2 5.3-2.2-5.3-5.3-2.2 5.3-2.2z' fill='white' fill-opacity='0.5'/%3E%3Cpath d='M56 50l1.8 4.4 4.4 1.8-4.4 1.8-1.8 4.4-1.8-4.4-4.4-1.8 4.4-1.8z' fill='white' fill-opacity='0.4'/%3E%3Ccircle cx='58' cy='16' r='3' fill='white' fill-opacity='0.45'/%3E%3Ccircle cx='30' cy='62' r='1.5' fill='white' fill-opacity='0.4'/%3E%3Ccircle cx='70' cy='38' r='1.2' fill='white' fill-opacity='0.35'/%3E%3Ccircle cx='10' cy='30' r='1' fill='white' fill-opacity='0.3'/%3E%3C/svg%3E"),
@@ -84,7 +81,6 @@
                 radial-gradient(circle at 15% 85%, rgba(255, 241, 118, 0.45), rgba(255, 241, 118, 0) 50%);
         }
 
-        /* Emotional: tears */
         body.theme-emotional #bg-decor {
             background-image:
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M22 14c2.4 4.4 5.6 7.8 5.6 11a5.6 5.6 0 1 1-11.2 0c0-3.2 3.2-6.6 5.6-11z' fill='white' fill-opacity='0.4'/%3E%3Cpath d='M58 48c2 3.6 4.6 6.4 4.6 9a4.6 4.6 0 1 1-9.2 0c0-2.6 2.6-5.4 4.6-9z' fill='white' fill-opacity='0.3'/%3E%3Ccircle cx='60' cy='20' r='1.2' fill='white' fill-opacity='0.35'/%3E%3Ccircle cx='14' cy='58' r='1' fill='white' fill-opacity='0.3'/%3E%3C/svg%3E"),
@@ -92,7 +88,6 @@
                 radial-gradient(circle at 85% 88%, rgba(206, 147, 216, 0.4), rgba(206, 147, 216, 0) 50%);
         }
 
-        /* Motivated: energy bolts */
         body.theme-motivated #bg-decor {
             background-image:
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M24 10l-10 15h6l-4 13 13-16h-7l5-12z' fill='white' fill-opacity='0.4'/%3E%3Cpath d='M58 44l-7 10h4l-3 9 9-11h-5l3-8z' fill='white' fill-opacity='0.3'/%3E%3Ccircle cx='60' cy='16' r='1.4' fill='white' fill-opacity='0.45'/%3E%3Ccircle cx='38' cy='64' r='1.1' fill='white' fill-opacity='0.35'/%3E%3C/svg%3E"),
@@ -100,7 +95,6 @@
                 radial-gradient(circle at 88% 85%, rgba(255, 171, 145, 0.55), rgba(255, 171, 145, 0) 50%);
         }
 
-        /* Angry: burst marks */
         body.theme-angry #bg-decor {
             background-image:
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20 8v7M20 31v7M8 20h7M31 20h7M12 12l5 5M28 12l-5 5M12 28l5-5M28 28l-5-5' stroke='white' stroke-width='3' stroke-linecap='round' opacity='0.4'/%3E%3Cpath d='M56 52l-6 9h5l-2 8 8-10h-5l3-7z' fill='white' fill-opacity='0.3'/%3E%3Ccircle cx='58' cy='18' r='1.3' fill='white' fill-opacity='0.4'/%3E%3C/svg%3E"),
@@ -108,7 +102,6 @@
                 radial-gradient(circle at 88% 88%, rgba(255, 138, 128, 0.4), rgba(255, 138, 128, 0) 45%);
         }
 
-        /* Happy: hearts + sparkles */
         body.theme-happy #bg-decor {
             background-image:
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M20 30c-4.8-3.5-8-6.3-8-10a4.5 4.5 0 0 1 8-2.8 4.5 4.5 0 0 1 8 2.8c0 3.7-3.2 6.5-8 10z' fill='white' fill-opacity='0.4'/%3E%3Cpath d='M56 64c-4-2.9-6.6-5.2-6.6-8.3a3.7 3.7 0 0 1 6.6-2.3 3.7 3.7 0 0 1 6.6 2.3c0 3.1-2.6 5.4-6.6 8.3z' fill='white' fill-opacity='0.3'/%3E%3Cpath d='M58 14l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z' fill='white' fill-opacity='0.45'/%3E%3Ccircle cx='34' cy='58' r='1.3' fill='white' fill-opacity='0.4'/%3E%3Ccircle cx='68' cy='40' r='1' fill='white' fill-opacity='0.35'/%3E%3C/svg%3E"),
@@ -116,7 +109,6 @@
                 radial-gradient(circle at 85% 88%, rgba(255, 183, 197, 0.5), rgba(255, 183, 197, 0) 50%);
         }
 
-        /* Sad: rain streaks */
         body.theme-sad #bg-decor {
             background-image:
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M12 54l4-8M30 62l4-8M48 44l3-6M64 30l3-6' stroke='white' stroke-width='2.5' stroke-linecap='round' opacity='0.4' fill='none'/%3E%3Cpath d='M52 24c1.8 3.4 4.4 6 4.4 8.6a4.4 4.4 0 1 1-8.8 0c0-2.6 2.6-5.2 4.4-8.6z' fill='white' fill-opacity='0.35'/%3E%3Ccircle cx='24' cy='16' r='1.2' fill='white' fill-opacity='0.35'/%3E%3C/svg%3E"),
@@ -124,7 +116,6 @@
                 radial-gradient(circle at 85% 90%, rgba(159, 168, 218, 0.4), rgba(159, 168, 218, 0) 50%);
         }
 
-        /* Meh: deliberately boring dots */
         body.theme-meh #bg-decor {
             background-image:
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ccircle cx='20' cy='20' r='1.6' fill='white' fill-opacity='0.3'/%3E%3Ccircle cx='60' cy='44' r='1.4' fill='white' fill-opacity='0.28'/%3E%3Ccircle cx='38' cy='64' r='1.2' fill='white' fill-opacity='0.25'/%3E%3Ccircle cx='68' cy='14' r='1.1' fill='white' fill-opacity='0.22'/%3E%3Cpath d='M12 52h9' stroke='white' stroke-width='2' stroke-linecap='round' opacity='0.3'/%3E%3C/svg%3E"),
@@ -154,6 +145,33 @@
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
         @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ============================================================
+           HOME LOGO — girly, static (no animation)
+           ============================================================ */
+        .app-logo { display: flex; flex-direction: column; align-items: center; gap: 5px; margin: 4px 0 10px; }
+        .logo-icon {
+            position: relative;
+            width: 62px; height: 62px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #FFC1CC 0%, #FF8DA1 100%);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 20px rgba(255, 141, 161, 0.35);
+            border: 3px solid rgba(255,255,255,0.65);
+        }
+        .logo-m {
+            color: #fff; font-family: 'Fredoka', sans-serif;
+            font-size: 2.3rem; font-weight: 600; line-height: 1;
+            margin-top: -5px; text-shadow: 0 2px 4px rgba(255, 110, 145, 0.4);
+        }
+        .logo-bow {
+            position: absolute; top: -13px; right: -15px;
+            font-size: 1.5rem; transform: rotate(18deg);
+        }
+        .logo-word {
+            font-family: 'Fredoka', sans-serif; font-size: 1.2rem;
+            color: var(--text-brown); letter-spacing: 2px;
+        }
 
         /* --- Components --- */
         .btn {
@@ -226,7 +244,7 @@
 
         /* --- Home --- */
         .header-greeting { font-family: 'Fredoka', sans-serif; font-size: 1.6rem; margin-bottom: 5px; color: var(--text-brown); }
-        .bunny-home { text-align: center; margin: 30px 0; position: relative; }
+        .bunny-home { text-align: center; margin: 25px 0; position: relative; }
         .bunny-wrapper { position: relative; display: inline-block; }
         .reaction-emoji { position: absolute; top: 0; right: -20px; font-size: 2.5rem; animation: float 2s infinite ease-in-out; }
 
@@ -423,8 +441,18 @@
 
     <!-- 3. Home -->
     <div id="home-screen" class="screen">
+        <!-- Girly static logo -->
+        <div class="app-logo">
+            <div class="logo-icon">
+                <span class="logo-bow">🎀</span>
+                <span class="logo-m">M</span>
+            </div>
+            <div class="logo-word">Moodsie</div>
+        </div>
+
         <div class="header-greeting" id="header-greeting">Hi, lovely! 🎀</div>
         <p style="color:var(--text-grey);">How are you feeling today?</p>
+        <p id="today-hint" style="display:none; font-size:0.85rem; color:var(--text-grey); margin-top:4px;"></p>
 
         <div id="home-bunny-container" class="bunny-home">
             <div class="bunny-wrapper">
@@ -477,7 +505,6 @@
             </div>
             <div id="extra-status" style="text-align: center; font-size: 0.8rem; margin-top: 8px; color: var(--text-grey); min-height: 1em;"></div>
 
-            <!-- Hidden file input + photo preview -->
             <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="onPhotoPicked(event)">
             <div id="photo-preview" style="display:none;">
                 <img id="photo-preview-img" alt="Photo preview">
@@ -643,7 +670,7 @@
     let currentDate = new Date();
     let tempRating = 0;
     let appReady = false;
-    let tempPhoto = null; // data URL of the picked photo
+    let tempPhoto = null;
     const extras = { photo: false, music: false };
 
     /* --- Helpers --- */
@@ -694,6 +721,7 @@
         try { loadData(); } catch (e) {}
         try { validateStreak(); } catch (e) {}
         try { updateGreeting(); } catch (e) {}
+        try { updateTodayHint(); } catch (e) {}
         try { initMoodGrid(); } catch (e) {}
         try { initRating(); } catch (e) {}
         try { initAccessories(); } catch (e) {}
@@ -793,7 +821,7 @@
         if (tabId === 'profile') updateStats();
     }
 
-    /* --- Home & Mood Logic --- */
+    /* --- Home --- */
     function updateGreeting() {
         const h = new Date().getHours();
         let g = 'Hi, night owl! 🌙';
@@ -801,6 +829,19 @@
         else if (h >= 12 && h < 17) g = 'Good afternoon, lovely! ☀️';
         else if (h >= 17 && h < 21) g = 'Good evening, lovely! 🌆';
         document.getElementById('header-greeting').innerText = g;
+    }
+
+    function updateTodayHint() {
+        const el = document.getElementById('today-hint');
+        if (!el) return;
+        const entry = appState.entries.find(e => e.date === todayISO());
+        if (entry) {
+            const mood = MOODS.find(m => m.id === entry.moodId);
+            el.innerHTML = `Today's flower: <span style="font-size:1.1rem;">${entry.flower || (mood ? mood.flower : '🌱')}</span>${entry.photo ? ' 📷' : ''}`;
+            el.style.display = 'block';
+        } else {
+            el.style.display = 'none';
+        }
     }
 
     function initMoodGrid() {
@@ -863,23 +904,19 @@
     }
 
     function toggleExtra(type) {
-        if (type === 'photo') { pickPhoto(); return; } // 📸 opens the gallery/camera now
+        if (type === 'photo') { pickPhoto(); return; }
         extras[type] = !extras[type];
         updateExtraStatus();
     }
 
-    /* ============================================================
-       PHOTO PICKING (from phone gallery or camera)
-       The image is auto-resized + compressed so localStorage
-       doesn't blow up (~100KB per photo instead of ~5MB).
-       ============================================================ */
+    /* --- Photo Picking --- */
     function pickPhoto() {
         document.getElementById('photo-input').click();
     }
 
     function onPhotoPicked(e) {
         const file = e.target.files && e.target.files[0];
-        e.target.value = ''; // allow re-picking the same file
+        e.target.value = '';
         if (!file) return;
         if (!file.type || !file.type.startsWith('image/')) {
             showToast('That is not an image 😅');
@@ -900,7 +937,7 @@
         reader.onload = function () {
             const img = new Image();
             img.onload = function () {
-                const maxDim = 800; // longest side after resize
+                const maxDim = 800;
                 let w = img.width, h = img.height;
                 if (w > maxDim || h > maxDim) {
                     if (w >= h) { h = Math.round(h * maxDim / w); w = maxDim; }
@@ -940,14 +977,13 @@
 
         let ok = saveData();
         if (!ok && entry.photo) {
-            // Storage full → at least keep the memory without the photo
             entry.photo = null;
             const idx = appState.entries.findIndex(e => e.date === todayStr);
             if (idx >= 0) appState.entries[idx].photo = null;
             ok = saveData();
         }
 
-        // Reset for next check-in
+        // Reset the check-in form
         document.getElementById('journal-note').value = '';
         document.getElementById('extra-status').innerText = '';
         extras.photo = false; extras.music = false;
@@ -964,8 +1000,10 @@
         document.body.className = '';
         setDecor(null);
 
-        showToast(ok ? 'Saved to your garden! 🌱✨' : 'Saved here — but storage is full 😅');
-        setTimeout(() => switchTab('garden'), 900);
+        // ✅ STAY on home page (no switching to garden)
+        updateTodayHint();
+        showToast(ok ? 'Saved! 🌱✨' : 'Saved here — but storage is full 😅');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function checkStreak(dateStr) {
@@ -989,7 +1027,7 @@
             const el = document.createElement('div');
             el.className = 'garden-spot';
             el.title = prettyDate(entry.date);
-            el.innerText = entry.photo ? '📷' : (mood ? mood.flower : '🌱'); // flowers with a photo become camera flowers
+            el.innerText = entry.photo ? '📷' : (mood ? mood.flower : '🌱');
             el.onclick = () => showEntryDetail(entry);
             container.appendChild(el);
         });
@@ -1154,6 +1192,7 @@
             if (document.getElementById('garden-screen').classList.contains('active')) renderGarden();
             if (document.getElementById('journal-screen').classList.contains('active')) renderJournal();
             if (document.getElementById('calendar-screen').classList.contains('active')) renderCalendar();
+            updateTodayHint();
             showToast('Memory deleted.');
         }
     }
